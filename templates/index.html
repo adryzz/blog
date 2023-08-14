@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}gay seggs{% endblock %}
+
+{% block content %}
+  <h1>Blog</h1><small class="margin-big"><a href="/blog/rss.xml">RSS feed</a></small>
+  <ul class="reduced-margin">
+  {% for page in pages %}
+  <li class="no-bullets margin-bottom">
+    <a href="{{page.url}}" class="no-margin">
+      <h3 class="no-margin">{{page.title}}</h3>
+    </a>
+
+    <div class="byline">
+      {{page.timestamp.format("%b %-d, %Y - %H:%M UTC")}}
+
+      {% if let Some(edit) = page.edit_timestamp %}
+      <small>(updated {{edit.format("%b %-d, %Y - %H:%M UTC")}})</small>
+      {% endif %}
+
+      - {{page.time_to_read}} minutes to read -
+      by 
+      {% for author in page.authors %}
+        {% if loop.first %}
+        {{author}}
+        {% else if loop.last %}
+         and {{author}}
+        {% else %}
+        , {{author}}
+        {% endif %}
+      {% endfor %}
+      -
+
+      in 
+      {% for tag in page.tags %}
+        {% if loop.first %}
+        <a>{{tag}}</a>
+        {% else %}
+        , <a>{{tag}}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    {% if let Some(desc) = page.description %}
+    <strong>{{desc}}</strong>
+    {% endif %}
+  </li>
+{% endfor %}
+  </ul>
+  <p>super cool page</p>
+{% endblock %}
