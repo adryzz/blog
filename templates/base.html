@@ -14,31 +14,8 @@
       text-decoration:underline
     }
     a.active,
-    #site_header {
-      border-bottom:1px solid #ff66ba;
-      padding-bottom:5px
-    }
     footer {
       padding-top:5px
-    }
-    .pagination {
-      justify-content:space-between;
-      display:flex
-    }
-    .pagination a {
-      font-size:large;
-      font-weight:bolder
-    }
-    footer,
-    #site_header,
-    .lavender-webring-container {
-      text-align:center
-    }
-    .list-entry {
-      list-style-type:none
-    }
-    .list-entry h2 {
-      margin-bottom:0
     }
     #content {
       max-width:900px;
@@ -51,56 +28,16 @@
       content:"·";
       display:inline-block
     }
-    time,
-    .author,
-    .updated {
-      font-weight:700
-    }
     .article_header,
     .page_header {
       border-bottom:1px dotted #ff66ba;
       padding-bottom:4px
     }
-    .article_header img {
-      width:100%
-    }
-    .related {
-      border-top:1px dotted #ff66ba;
-      margin-top:18px
-    }
-    .related h3 {
-      margin-top:4px;
-      margin-bottom:0
-    }
-    .related ul {
-      margin-top:4px;
-      padding-left:0
-    }
-    .related ul h4 {
-      margin-top:4px;
-      margin-bottom:0
-    }
-    .article_header>h1,
-    .page_header>h1 {
-      margin:.1rem
-    }
-    img,
-    video {
-      max-width:100%
-    }
-    .tag {
-      font-weight:700
-    }
-    .banner-link {
-      color:inherit;
-      -webkit-text-decoration:inherit;
-      text-decoration:inherit
-    }
     .content-warning {
       width:-webkit-fit-content;
       width:-moz-fit-content;
       width:fit-content;
-      background-color:rgba(221,116,174,.21);
+      background-color: #2d1a26;
       border:2px solid #920050;
       border-radius:8px;
       margin-top:16px;
@@ -108,19 +45,11 @@
       padding:4px;
       font-size:1.1rem
     }
-    .content-warning>p {
-      margin:0
-    }
-    .content-warning {
-      display: block;
-    }
-    .content-warning:active {
-      display: block;
-    }
     .byline {
       font-size: 10px;
       margin-top: 0;
-      margin-left:4px
+      margin-left:4px;
+      font-weight:500
     }
     .greentext {
       color:#789922
@@ -139,16 +68,35 @@
     .margin-bottom {
       margin-bottom: 24px;
     }
-    h1, small {
-      display: inline;
-    }
     .margin-big {
       margin: 24px
     }
-
+    .site-header {
+      border-bottom:1px solid #ff66ba;
+      padding-bottom:5px;
+      text-align: center;
+    }
+    .hidden {
+      display: none;
+    }
+    input:checked + .hidden {
+    display: block;
+  }
     </style>
   </head>
   <body>
+    <header class="site-header">
+      <h1>Lena's<sub>{% block page_name %}home{% endblock %}</sub></h1>
+      <nav>
+        <span><a href="/">home</a></span>
+            <span>|</span>
+        <span><a href="/blog" class="active">blog</a></span>
+            <span>|</span>
+        <span><a href="/contact">contact</a></span>
+        <span>|</span>
+        <span><a href="/blog/rss.xml">rss feed</a></span>
+      </nav>
+    </header>
     <div id="content">
       {% block content %}<p>Placeholder content</p>{% endblock %}
     </div>
