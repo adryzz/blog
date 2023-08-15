@@ -1,4 +1,5 @@
 mod blog;
+mod metadata;
 mod rss;
 use askama::Template;
 use axum::{http::StatusCode, routing::get, Router};
@@ -20,7 +21,8 @@ async fn run() -> anyhow::Result<()> {
         .route("/blog/rss.xml", get(rss::rss))
         .route("/blog/:page", get(blog::page))
         .route("/blog", get(blog::blog))
-        .nest("/blog", axum_static::static_router("blog"));
+        .nest("/blog", axum_static::static_router("blog"))
+        .nest("/badges", axum_static::static_router("badges"));
 
     let listener = std::net::TcpListener::bind("0.0.0.0:3000")?;
     tracing::info!("Listening on {}...", listener.local_addr()?);
@@ -34,10 +36,8 @@ async fn run() -> anyhow::Result<()> {
 
 #[derive(Template)]
 #[template(path = "index.html")]
-struct IndexTemplate {
-    
-}
+struct IndexTemplate {}
 
 async fn index() -> Result<IndexTemplate, StatusCode> {
-    Ok(IndexTemplate {  })
+    Ok(IndexTemplate {})
 }

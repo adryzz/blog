@@ -1,8 +1,50 @@
 {% extends "base.html" %}
 
 {% block title %}{{page}}{% endblock %}
+{% block page_name %}{{page_name}}{% endblock %}
 
 {% block content %}
-  <h1>{{page}}</h1>
+    {% if let Some(image_url) = metadata.image %}
+      {% if let Some(image_alt) = metadata.image_alt %}
+      <img src="{{image_url}}" alt="{{image_alt}}">
+      {% else %}
+      <img src="{{image_url}}">
+      {% endif %}
+    {% endif %}
+    <div class="byline-big">
+      {{metadata.timestamp.format("%b %-d, %Y - %H:%M UTC")}}
+
+      {% if let Some(edit) = metadata.edit_timestamp %}
+      <small>(updated {{edit.format("%b %-d, %Y - %H:%M UTC")}})</small>
+      {% endif %}
+
+      - {{metadata.time_to_read}} minutes to read -
+      by 
+      {% for author in metadata.authors %}
+        {% if loop.first %}
+        {{author}}
+        {% else if loop.last %}
+         and {{author}}
+        {% else %}
+        , {{author}}
+        {% endif %}
+      {% endfor %}
+      -
+
+      in 
+      {% for tag in metadata.tags %}
+        {% if loop.first %}
+        <a>{{tag}}</a>
+        {% else %}
+        , <a>{{tag}}</a>
+        {% endif %}
+      {% endfor %}
+    </div>
+
+    <h1 class="no-margin">{{metadata.title}}</h3>
+
+    {% if let Some(desc) = metadata.description %}
+    <strong>{{desc}}</strong>
+    {% endif %}
   {{ content|safe }}
 {% endblock %}

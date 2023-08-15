@@ -1,9 +1,9 @@
 {% extends "base.html" %}
 
 {% block title %}gay seggs{% endblock %}
+{% block page_name %}{{page_name}}{% endblock %}
 
 {% block content %}
-  <h1 class="no-margin">Blog</h1>
   <ul class="no-bullets reduced-margin">
   {% for page in pages %}
   <li class="no-bullets margin-bottom">
@@ -47,5 +47,4 @@
   </li>
 {% endfor %}
   </ul>
-  <p>super cool page</p>
 {% endblock %}
