@@ -31,7 +31,7 @@ pub struct BlogTemplate {
     page_name: &'static str,
 }
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub struct BlogPage {
     pub title: String,
     pub description: Option<String>,
@@ -45,6 +45,18 @@ pub struct BlogPage {
     pub time_to_read: u32,
 }
 
+impl PartialOrd for BlogPage {
+    fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
+        other.timestamp.partial_cmp(&self.timestamp)
+    }
+}
+
+
+impl Ord for BlogPage {
+    fn cmp(&self, other: &Self) -> std::cmp::Ordering {
+        other.timestamp.cmp(&self.timestamp)
+    }
+}
 pub async fn get_pages() -> anyhow::Result<Vec<BlogPage>> {
     let mut entries = tokio::fs::read_dir("blog").await?;
 
@@ -65,6 +77,8 @@ pub async fn get_pages() -> anyhow::Result<Vec<BlogPage>> {
             }
         }
     }
+
+    pages.sort();
 
     Ok(pages)
 }
