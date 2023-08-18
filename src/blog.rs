@@ -21,7 +21,7 @@ pub async fn blog() -> Result<BlogTemplate, StatusCode> {
     Ok(BlogTemplate {
         pages,
         page_name: "blog",
-        root_url: crate::ROOT_URL
+        root_url: crate::ROOT_URL,
     })
 }
 
@@ -53,12 +53,12 @@ impl PartialOrd for BlogPage {
     }
 }
 
-
 impl Ord for BlogPage {
     fn cmp(&self, other: &Self) -> std::cmp::Ordering {
         other.timestamp.cmp(&self.timestamp)
     }
 }
+
 pub async fn get_pages() -> anyhow::Result<Vec<BlogPage>> {
     let mut entries = tokio::fs::read_dir("blog").await?;
 
@@ -117,14 +117,19 @@ pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCo
         Err(_) => return Err(StatusCode::NOT_FOUND), // FIXME: add other status codes
     };
 
-    let metadata = parse_page(&path, &s).await
+    let metadata = parse_page(&path, &s)
+        .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
     let adapter = SyntectAdapter::new("Solarized (dark)");
     let mut opt = ComrakOptions::default();
     let mut plugins = ComrakPlugins::default();
     plugins.render.codefence_syntax_highlighter = Some(&adapter);
-
+    opt.extension.header_ids = Some(String::new());
+    opt.extension.strikethrough = true;
+    opt.extension.superscript = true;
+    opt.extension.table = true;
+    opt.extension.tasklist = true;
     opt.render.unsafe_ = true;
 
     Ok(BlogPageTemplate {
@@ -132,7 +137,7 @@ pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCo
         metadata,
         content: markdown_to_html_with_plugins(&s, &opt, &plugins),
         page_name: "blog",
-        root_url: crate::ROOT_URL
+        root_url: crate::ROOT_URL,
     })
 }
 

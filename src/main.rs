@@ -40,11 +40,9 @@ async fn run() -> anyhow::Result<()> {
 #[derive(Template)]
 #[template(path = "index.html")]
 struct IndexTemplate {
-    page_name: &'static str
+    page_name: &'static str,
 }
 
 async fn index() -> Result<IndexTemplate, StatusCode> {
-    Ok(IndexTemplate {
-        page_name: "home"
-    })
+    Ok(IndexTemplate { page_name: "home" })
 }
