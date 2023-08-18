@@ -46,3 +46,11 @@ pub fn find_timestamp(map: &[(&str, &str)], key: &str) -> anyhow::Result<NaiveDa
     Ok(NaiveDateTime::from_timestamp_opt(int, 0)
         .ok_or_else(|| anyhow!("Error while generating timestamp"))?)
 }
+
+pub fn calculate_read_time(content: &str) -> u32 {
+
+    // TODO: improve this maybe idk seems fine for now
+    const AVG_CHAR_PER_WORD: usize = 5;
+    const AVG_WPM: usize = 238;
+    (content.len() / (AVG_CHAR_PER_WORD * AVG_WPM)) as u32
+}

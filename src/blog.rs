@@ -94,6 +94,8 @@ async fn parse_page(path: &PathBuf, content: &str) -> anyhow::Result<BlogPage> {
             .ok_or_else(|| anyhow!("Error while generating page URL"))?
     );
 
+    let min = metadata::calculate_read_time(content);
+
     let metadata = metadata::parse_from_markdown(content)?;
 
     Ok(BlogPage {
@@ -106,7 +108,7 @@ async fn parse_page(path: &PathBuf, content: &str) -> anyhow::Result<BlogPage> {
         tags: metadata::find_multiple(&metadata, "tag"),
         timestamp: metadata::find_timestamp(&metadata, "timestamp")?,
         edit_timestamp: metadata::find_timestamp(&metadata, "edit_timestamp").ok(),
-        time_to_read: 2,
+        time_to_read: min,
     })
 }
 
