@@ -261,6 +261,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "blog"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "askama",
+ "askama_axum",
+ "axum",
+ "axum_static",
+ "chrono",
+ "comrak 0.18.0",
+ "console-subscriber",
+ "rss",
+ "tokio",
+ "tracing",
+ "tracing-subscriber",
+]
+
+[[package]]
 name = "byteorder"
 version = "1.4.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -648,24 +666,6 @@ dependencies = [
  "futures-task",
  "pin-project-lite",
  "pin-utils",
-]
-
-[[package]]
-name = "gay-seggs"
-version = "0.1.0"
-dependencies = [
- "anyhow",
- "askama",
- "askama_axum",
- "axum",
- "axum_static",
- "chrono",
- "comrak 0.18.0",
- "console-subscriber",
- "rss",
- "tokio",
- "tracing",
- "tracing-subscriber",
 ]
 
 [[package]]
