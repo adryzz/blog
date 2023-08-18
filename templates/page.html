@@ -46,10 +46,10 @@
 
       in 
       {% for tag in metadata.tags %}
-        {% if loop.first %}
+        {% if loop.last %}
         <a>{{tag}}</a>
         {% else %}
-        , <a>{{tag}}</a>
+        <a>{{tag}}</a>, 
         {% endif %}
       {% endfor %}
     </div>
