@@ -1,7 +1,20 @@
 {% extends "base.html" %}
 
-{% block title %}{{page}}{% endblock %}
+{% block title %}{{metadata.title}} - Lena's {{page_name}} :3{% endblock %}
 {% block page_name %}{{page_name}}{% endblock %}
+
+
+{% block description %}
+{% if let Some(desc) = metadata.description %}
+{{desc}}
+{% endif %}
+{% endblock %}
+
+{% block image %}
+{% if let Some(img) = metadata.image %}
+{{root_url}}/blog/{{img}}
+{% endif %}
+{% endblock %}
 
 {% block content %}
     {% if let Some(image_url) = metadata.image %}

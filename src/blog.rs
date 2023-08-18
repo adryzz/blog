@@ -21,6 +21,7 @@ pub async fn blog() -> Result<BlogTemplate, StatusCode> {
     Ok(BlogTemplate {
         pages,
         page_name: "blog",
+        root_url: crate::ROOT_URL
     })
 }
 
@@ -29,6 +30,7 @@ pub async fn blog() -> Result<BlogTemplate, StatusCode> {
 pub struct BlogTemplate {
     pages: Vec<BlogPage>,
     page_name: &'static str,
+    root_url: &'static str,
 }
 
 #[derive(Debug, PartialEq, Eq)]
@@ -118,8 +120,7 @@ pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCo
     let metadata = parse_page(&path, &s).await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-
-    let adapter = SyntectAdapter::new("base16-ocean.dark");
+    let adapter = SyntectAdapter::new("Solarized (dark)");
     let mut opt = ComrakOptions::default();
     let mut plugins = ComrakPlugins::default();
     plugins.render.codefence_syntax_highlighter = Some(&adapter);
@@ -131,6 +132,7 @@ pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCo
         metadata,
         content: markdown_to_html_with_plugins(&s, &opt, &plugins),
         page_name: "blog",
+        root_url: crate::ROOT_URL
     })
 }
 
@@ -141,4 +143,5 @@ pub struct BlogPageTemplate {
     content: String,
     metadata: BlogPage,
     page_name: &'static str,
+    root_url: &'static str,
 }

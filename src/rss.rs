@@ -9,7 +9,7 @@ pub async fn rss() -> Result<axum::http::Response<String>, StatusCode> {
 
     let channel = rss::ChannelBuilder::default()
         .title("Lena's blog :3".to_string())
-        .link("http://lena.nihil.gay".to_string())
+        .link(crate::ROOT_URL.to_string())
         .description("Lena's blog feed".to_string())
         .items(items)
         .build();
@@ -29,7 +29,7 @@ async fn get_pages_rss(pages: &[BlogPage]) -> Vec<rss::Item> {
     for page in pages {
         let item = rss::ItemBuilder::default()
             .title(Some(page.title.clone()))
-            .link(Some(format!("http://lena.nihil.gay{}", page.url)))
+            .link(Some(format!("{}{}", crate::ROOT_URL, page.url)))
             .description(page.description.clone())
             .pub_date(Some(page.timestamp.and_utc().to_rfc2822()))
             .build();

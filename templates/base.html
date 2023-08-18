@@ -1,7 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta content="text/html;charset=utf-8" http-equiv="Content-Type">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta property="og:title" content="{% block title %}{{ title }}{% endblock %}">
+    <meta property="og:type" content="object">
+    <meta property="og:image" content="{% block image %}/preview.png{% endblock %}">
+    <!-- empty description when not set -->
+    <meta property="og:description" content="{% block description %}{% endblock %}">
+    <meta property="og:site_name" content="Lena's blog :3">
+    <!-- this just makes the image preview big -->
+    <meta name="twitter:card" content="summary_large_image">
+
     <title>{% block title %}{{ title }}{% endblock %}</title>
     <style>html {
       color:#e7e6e3;
@@ -135,7 +145,9 @@
     <![endif]-->
   </head>
   <body>
-    <header class="site-header">
+    <!-- this is here just because IE5 doesnt support headers or footers-->
+    <div class="site-header">
+    <header class="site-header"> 
       <h1>Lena's<sub>{% block page_name %}home{% endblock %}</sub></h1>
       <nav>
         <span><a href="/">home</a></span>
@@ -147,6 +159,7 @@
         <span><a href="/blog/rss.xml">rss feed</a></span>
       </nav>
     </header>
+  </div>
     <div class="separator-top"></div>
 
     <div id="content">
@@ -154,6 +167,8 @@
     </div>
 
     <div class="separator-bottom"></div>
+    <!-- this is here just because IE5 doesnt support headers or footers-->
+    <div class="site-footer">
     <footer class="site-footer">
       <div>
         <span><a href="/blog/rss.xml">rss feed</a></span>
@@ -164,5 +179,6 @@
         {% include "badges.html" %}
       </div>
     </footer>
+  </div>
   </body>
 </html>

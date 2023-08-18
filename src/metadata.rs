@@ -21,7 +21,7 @@ pub fn find_single(map: &[(&str, &str)], key: &str) -> anyhow::Result<String> {
         .iter()
         .filter(|i| i.0 == key)
         .nth(0)
-        .ok_or_else(|| anyhow!("Couldn't find value with key {}", key))?
+        .ok_or_else(|| anyhow!("Couldn't find value with key '{}'", key))?
         .1
         .to_string())
 }
@@ -38,7 +38,7 @@ pub fn find_timestamp(map: &[(&str, &str)], key: &str) -> anyhow::Result<NaiveDa
         .iter()
         .filter(|i| i.0 == key)
         .nth(0)
-        .ok_or_else(|| anyhow!("Couldn't find value with key {}", key))?
+        .ok_or_else(|| anyhow!("Couldn't find value with key '{}'", key))?
         .1;
 
     let int = i64::from_str_radix(value, 10)?;

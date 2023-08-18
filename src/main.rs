@@ -4,6 +4,8 @@ mod rss;
 use askama::Template;
 use axum::{http::StatusCode, routing::get, Router};
 
+const ROOT_URL: &str = "http://10.0.0.2:3000";
+
 #[tokio::main]
 async fn main() {
     tracing_subscriber::fmt::init();
@@ -20,6 +22,7 @@ async fn run() -> anyhow::Result<()> {
         .route("/", get(index))
         .route("/blog/rss.xml", get(rss::rss))
         .route("/blog/:page", get(blog::page))
+        //.route("/blog/:page/", get(blog::page))
         .route("/blog", get(blog::blog))
         .nest("/blog", axum_static::static_router("blog"))
         .nest("/badges", axum_static::static_router("badges"));
@@ -36,8 +39,12 @@ async fn run() -> anyhow::Result<()> {
 
 #[derive(Template)]
 #[template(path = "index.html")]
-struct IndexTemplate {}
+struct IndexTemplate {
+    page_name: &'static str
+}
 
 async fn index() -> Result<IndexTemplate, StatusCode> {
-    Ok(IndexTemplate {})
+    Ok(IndexTemplate {
+        page_name: "home"
+    })
 }
