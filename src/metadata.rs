@@ -48,7 +48,6 @@ pub fn find_timestamp(map: &[(&str, &str)], key: &str) -> anyhow::Result<NaiveDa
 }
 
 pub fn calculate_read_time(content: &str) -> u32 {
-
     // TODO: improve this maybe idk seems fine for now
     const AVG_CHAR_PER_WORD: usize = 5;
     const AVG_WPM: usize = 238;

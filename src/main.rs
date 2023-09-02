@@ -4,7 +4,7 @@ mod rss;
 use askama::Template;
 use axum::{http::StatusCode, routing::get, Router};
 
-const ROOT_URL: &str = "http://10.0.0.2:3000";
+const ROOT_URL: &str = "http://0.0.0.0:3000";
 
 #[tokio::main]
 async fn main() {
