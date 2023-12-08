@@ -53,7 +53,7 @@
     img,
     video {
       max-width: 90%;
-      height: auto;
+      max-height: 600px;
     }
     .content-warning {
       width:-webkit-fit-content;
@@ -66,6 +66,19 @@
       margin-bottom:16px;
       padding:4px;
       font-size:1.1rem
+    }
+    .http-warning {
+      width:-webkit-fit-content;
+      width:-moz-fit-content;
+      width:fit-content;
+      background-color: #2d1a26;
+      border:2px solid #920050;
+      border-radius:8px;
+      margin-top:16px;
+      margin-bottom:16px;
+      padding:4px;
+      font-size:1.1rem;
+      text-align:center
     }
     .byline {
       font-size: 10px;
@@ -155,14 +168,14 @@
     <!-- this is here just because IE5 doesnt support headers or footers-->
     <div class="site-header">
     <header class="site-header"> 
-      <h1>Lena's<sub>{% block page_name %}home{% endblock %}</sub></h1>
+      <h1>Lena's <sub role="presentation">{% block page_name %}home{% endblock %}</sub><!--<div class="http-warning">Not using HTTPS!</div>--></h1>
       <nav>
         <span><a href="/">home</a></span>
-            <span>|</span>
+        <span aria-hidden="true">|</span>
         <span><a href="/blog" class="active">blog</a></span>
-            <span>|</span>
+        <span aria-hidden="true">|</span>
         <span><a href="/contact">contact</a></span>
-        <span>|</span>
+        <span aria-hidden="true">|</span>
         <span><a href="/blog/rss.xml">rss feed</a></span>
       </nav>
     </header>
@@ -179,7 +192,7 @@
     <footer class="site-footer">
       <div>
         <span><a href="/blog/rss.xml">rss feed</a></span>
-            <span>|</span>
+            <span aria-hidden="true">|</span>
         <span><a href="https://github.com/adryzz" rel="noreferrer" target="_blank">github</a></span>
       </div>
       <div class="badges margin-big">

@@ -13,7 +13,7 @@ use crate::metadata;
 pub async fn blog() -> Result<BlogTemplate, StatusCode> {
     let pages = match get_pages().await {
         Ok(p) => p,
-        Err(e) => {
+        Err(_e) => {
             vec![]
         }
     };
