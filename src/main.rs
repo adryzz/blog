@@ -24,7 +24,7 @@ async fn run() -> anyhow::Result<()> {
         .route("/blog/:page", get(blog::page))
         //.route("/blog/:page/", get(blog::page))
         .route("/blog", get(blog::blog))
-        .nest("/blog", axum_static::static_router("blog"))
+        .nest("/blog", axum_static::static_router("content"))
         .nest("/badges", axum_static::static_router("badges"));
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;

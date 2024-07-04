@@ -61,7 +61,7 @@ impl Ord for BlogPage {
 }
 
 pub async fn get_pages() -> anyhow::Result<Vec<BlogPage>> {
-    let mut entries = tokio::fs::read_dir("blog").await?;
+    let mut entries = tokio::fs::read_dir("content").await?;
 
     let mut pages = vec![];
 
@@ -114,7 +114,7 @@ async fn parse_page(path: &PathBuf, content: &str) -> anyhow::Result<BlogPage> {
 }
 
 pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCode> {
-    let path = PathBuf::from(format!("blog/{}.md", page));
+    let path = PathBuf::from(format!("content/{}.md", page));
     let s = match tokio::fs::read_to_string(&path).await {
         Ok(a) => a,
         Err(e) => {
@@ -122,7 +122,7 @@ pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCo
                 return Err(StatusCode::NOT_FOUND);
             }
 
-            let tmp = PathBuf::from(format!("blog/{}.md.new", page));
+            let tmp = PathBuf::from(format!("content/{}.md.new", page));
             match tokio::fs::read_to_string(tmp).await {
                 Ok(o) => o,
                 Err(_) => return Err(StatusCode::NOT_FOUND),
