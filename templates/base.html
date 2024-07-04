@@ -11,6 +11,8 @@
     <meta property="og:site_name" content="Lena's blog :3">
     <!-- this just makes the image preview big -->
     <meta name="twitter:card" content="summary_large_image">
+    <!-- this makes the RSS feed recognizable by web browsers and extensions and stuff -->
+    <link rel="alternate" type="application/rss+xml" title="Lena's blog :3" href="/blog/rss.xml">
 
     <title>{% block title %}{{ title }}{% endblock %}</title>
     <style>html {
@@ -53,7 +55,7 @@
     img,
     video {
       max-width: 90%;
-      height: auto;
+      max-height: 600px;
     }
     .content-warning {
       width:-webkit-fit-content;
@@ -155,14 +157,14 @@
     <!-- this is here just because IE5 doesnt support headers or footers-->
     <div class="site-header">
     <header class="site-header"> 
-      <h1>Lena's<sub>{% block page_name %}home{% endblock %}</sub></h1>
+      <h1>Lena's <sub role="presentation">{% block page_name %}home{% endblock %}</sub></h1>
       <nav>
         <span><a href="/">home</a></span>
-            <span>|</span>
+            <span aria-hidden="true">|</span>
         <span><a href="/blog" class="active">blog</a></span>
-            <span>|</span>
+            <span aria-hidden="true">|</span>
         <span><a href="/contact">contact</a></span>
-        <span>|</span>
+        <span aria-hidden="true">|</span>
         <span><a href="/blog/rss.xml">rss feed</a></span>
       </nav>
     </header>
@@ -179,8 +181,12 @@
     <footer class="site-footer">
       <div>
         <span><a href="/blog/rss.xml">rss feed</a></span>
-            <span>|</span>
+            <span aria-hidden="true">|</span>
         <span><a href="https://github.com/adryzz" rel="noreferrer" target="_blank">github</a></span>
+            <span aria-hidden="true">|</span>
+       <span><a rel="me" href="https://social.treehouse.systems/@lena">fedi</a></span>
+            <span aria-hidden="true">|</span>
+        <span><a rel="me" href="https://social.nihil.gay/lena">fedi (gayer)</a></span>
       </div>
       <div class="badges margin-big">
         {% include "badges.html" %}

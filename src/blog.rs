@@ -3,6 +3,7 @@ use axum::{extract::Path, http::StatusCode};
 use comrak::plugins::syntect::SyntectAdapter;
 use comrak::{markdown_to_html_with_plugins, ComrakOptions, ComrakPlugins};
 
+use std::io::ErrorKind;
 use std::path::PathBuf;
 
 use anyhow::anyhow;
@@ -13,7 +14,7 @@ use crate::metadata;
 pub async fn blog() -> Result<BlogTemplate, StatusCode> {
     let pages = match get_pages().await {
         Ok(p) => p,
-        Err(e) => {
+        Err(_e) => {
             vec![]
         }
     };
@@ -116,14 +117,24 @@ pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCo
     let path = PathBuf::from(format!("blog/{}.md", page));
     let s = match tokio::fs::read_to_string(&path).await {
         Ok(a) => a,
-        Err(_) => return Err(StatusCode::NOT_FOUND), // FIXME: add other status codes
+        Err(e) => {
+            if e.kind() != ErrorKind::NotFound {
+                return Err(StatusCode::NOT_FOUND);
+            }
+
+            let tmp = PathBuf::from(format!("blog/{}.md.new", page));
+            match tokio::fs::read_to_string(tmp).await {
+                Ok(o) => o,
+                Err(_) => return Err(StatusCode::NOT_FOUND),
+            }
+        } // FIXME: add other status codes
     };
 
     let metadata = parse_page(&path, &s)
         .await
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)?;
 
-    let adapter = SyntectAdapter::new("Solarized (dark)");
+    let adapter = SyntectAdapter::new(Some("Solarized (dark)"));
     let mut opt = ComrakOptions::default();
     let mut plugins = ComrakPlugins::default();
     plugins.render.codefence_syntax_highlighter = Some(&adapter);
