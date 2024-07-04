@@ -12,9 +12,9 @@ askama_axum = { version = "0.4", features = ["markdown"] }
 axum = { version = "0.7", features = ["tracing"] }
 # temporary fix
 axum_static = { git = "https://github.com/paul-asvb/axum_static.git", version = "1.2.3" }
-chrono = { version = "0.4", default-features = false, features = ["time", "std"] }
-comrak = { version = "0.21", default-features = false, features = ["syntect", "emojis", "arbitrary"] }
-rss = { version = "2.0", features = ["chrono"] }
+chrono = { version = "0.4.29", default-features = false, features = ["std"] }
+comrak = { version = "0.24", default-features = false, features = ["syntect", "emojis", "arbitrary"] }
+rss = { version = "2.0.8", features = ["chrono"] }
 tokio = { version = "1.31", features = ["full", "tracing"] }
 tracing = "0.1"
 tracing-subscriber = "0.3"

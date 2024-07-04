@@ -1,5 +1,5 @@
 use anyhow::anyhow;
-use chrono::NaiveDateTime;
+use chrono::{DateTime, Utc};
 
 pub fn parse_from_markdown(content: &str) -> anyhow::Result<Vec<(&str, &str)>> {
     let mut vec = vec![];
@@ -32,7 +32,7 @@ pub fn find_multiple(map: &[(&str, &str)], key: &str) -> Vec<String> {
         .collect()
 }
 
-pub fn find_timestamp(map: &[(&str, &str)], key: &str) -> anyhow::Result<NaiveDateTime> {
+pub fn find_timestamp(map: &[(&str, &str)], key: &str) -> anyhow::Result<DateTime<Utc>> {
     let value = map
         .iter()
         .find(|i| i.0 == key)
@@ -41,7 +41,7 @@ pub fn find_timestamp(map: &[(&str, &str)], key: &str) -> anyhow::Result<NaiveDa
 
     let int = i64::from_str_radix(value, 10)?;
 
-    NaiveDateTime::from_timestamp_opt(int, 0)
+    DateTime::from_timestamp(int, 0)
         .ok_or_else(|| anyhow!("Error while generating timestamp"))
 }
 

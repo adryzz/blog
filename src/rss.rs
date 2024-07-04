@@ -31,7 +31,7 @@ async fn get_pages_rss(pages: &[BlogPage]) -> Vec<rss::Item> {
             .title(Some(page.title.clone()))
             .link(Some(format!("{}{}", crate::ROOT_URL, page.url)))
             .description(page.description.clone())
-            .pub_date(Some(page.timestamp.and_utc().to_rfc2822()))
+            .pub_date(Some(page.timestamp.to_rfc2822()))
             .build();
 
         items.push(item);

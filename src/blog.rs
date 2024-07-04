@@ -43,8 +43,8 @@ pub struct BlogPage {
     pub image: Option<String>,
     pub image_alt: Option<String>,
     pub tags: Vec<String>,
-    pub timestamp: NaiveDateTime,
-    pub edit_timestamp: Option<NaiveDateTime>,
+    pub timestamp: DateTime<Utc>,
+    pub edit_timestamp: Option<DateTime<Utc>>,
     pub time_to_read: u32,
 }
 
