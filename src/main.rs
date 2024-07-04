@@ -27,7 +27,7 @@ async fn run() -> anyhow::Result<()> {
         .nest("/blog", axum_static::static_router("content"))
         .nest("/badges", axum_static::static_router("badges"));
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await?;
+    let listener = tokio::net::TcpListener::bind("127.0.0.1:3000").await?;
     tracing::info!("Listening on {}...", listener.local_addr()?);
 
     axum::serve(listener, app).await?;
