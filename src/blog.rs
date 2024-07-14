@@ -139,6 +139,7 @@ pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCo
     let mut plugins = ComrakPlugins::default();
     plugins.render.codefence_syntax_highlighter = Some(&adapter);
     opt.extension.header_ids = Some(String::new());
+    opt.extension.math_code = true;
     opt.extension.strikethrough = true;
     opt.extension.superscript = true;
     opt.extension.table = true;
