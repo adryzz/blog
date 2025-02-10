@@ -15,7 +15,6 @@ atom-feed = { git = "https://github.com/adryzz/atom-feed", version = "0.1.0" }
 axum = { version = "0.8", features = ["macros", "tracing"] }
 chrono = { version = "0.4.29", default-features = false, features = ["std"] }
 comrak = { version = "0.35", default-features = false, features = ["syntect", "emojis", "arbitrary"] }
-rinja = { version = "0.3.5", features = ["with-axum"] }
 rss = { version = "2.0.8", features = ["chrono"] }
 tokio = { version = "1.31", features = ["full", "tracing"] }
 tower-http = { version = "0.6.2", features = ["fs", "trace"] }

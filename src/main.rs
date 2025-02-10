@@ -3,8 +3,7 @@ mod blog;
 mod metadata;
 mod rss;
 use std::{
-    collections::BTreeMap,
-    sync::{Arc, Mutex},
+    collections::BTreeMap, sync::Arc
 };
 use tokio::sync::RwLock;
 
