@@ -5,7 +5,7 @@ use crate::{blog, Cache};
 #[axum::debug_handler]
 pub async fn rss(State(cache): State<Cache>) -> Result<axum::http::Response<String>, StatusCode> {
     let pages = cache.0.read().await;
-    
+
     let items = get_pages_rss(pages.values()).await;
 
     let channel = rss::ChannelBuilder::default()
@@ -24,7 +24,10 @@ pub async fn rss(State(cache): State<Cache>) -> Result<axum::http::Response<Stri
         .map_err(|_| StatusCode::INTERNAL_SERVER_ERROR)
 }
 
-async fn get_pages_rss<'a, T>(pages: T) -> Vec<rss::Item> where T : IntoIterator<Item = &'a blog::BlogPage> {
+async fn get_pages_rss<'a, T>(pages: T) -> Vec<rss::Item>
+where
+    T: IntoIterator<Item = &'a blog::BlogPage>,
+{
     let mut items = vec![];
 
     for page in pages.into_iter() {

@@ -8,7 +8,7 @@ use blog::BlogPage;
 pub async fn atom(State(cache): State<Cache>) -> Result<axum::http::Response<String>, StatusCode> {
     let pages = cache.0.read().await;
     // fixup
-    let pages: Vec<&BlogPage> = pages.values().into_iter().collect();
+    let pages: Vec<&BlogPage> = pages.values().collect();
 
     let mut entries = vec![];
 
@@ -24,7 +24,7 @@ pub async fn atom(State(cache): State<Cache>) -> Result<axum::http::Response<Str
             .published(page.timestamp)
             .authors(authors);
         if let Some(desc) = &page.description {
-            entry = entry.summary(&*desc);
+            entry = entry.summary(desc);
         }
         entry = if let Some(edit) = page.edit_timestamp {
             entry.updated(edit)

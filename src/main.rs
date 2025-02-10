@@ -2,9 +2,7 @@ mod atom;
 mod blog;
 mod metadata;
 mod rss;
-use std::{
-    collections::BTreeMap, sync::Arc
-};
+use std::{collections::BTreeMap, sync::Arc};
 use tokio::sync::RwLock;
 
 use askama::Template;
@@ -64,6 +62,12 @@ async fn index() -> Result<IndexTemplate, StatusCode> {
 
 #[derive(Debug, Clone)]
 pub struct Cache(Arc<RwLock<BTreeMap<DateTime<Utc>, blog::BlogPage>>>);
+
+impl Default for Cache {
+    fn default() -> Self {
+        Self::new()
+    }
+}
 
 impl Cache {
     pub fn new() -> Self {

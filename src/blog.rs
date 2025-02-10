@@ -7,7 +7,7 @@ use serde::Deserialize;
 
 use std::collections::BTreeMap;
 use std::io::ErrorKind;
-use std::ops::{Deref, DerefMut};
+use std::ops::DerefMut;
 use std::path::PathBuf;
 
 use anyhow::anyhow;
@@ -16,19 +16,26 @@ use chrono::prelude::*;
 use crate::{metadata, Cache};
 
 #[axum::debug_handler]
-pub async fn blog(State(cache): State<Cache>, Query(params): Query<BlogQuery>) -> Result<BlogTemplate, StatusCode> {
+pub async fn blog(
+    State(cache): State<Cache>,
+    Query(params): Query<BlogQuery>,
+) -> Result<BlogTemplate, StatusCode> {
     let pages = cache.0.read().await;
 
     if let Some(tag) = params.tagged {
         return Ok(BlogTemplate {
-            pages: pages.values().filter(|v| v.tags.contains(&tag)).cloned().collect(),
+            pages: pages
+                .values()
+                .filter(|v| v.tags.contains(&tag))
+                .cloned()
+                .collect(),
             page_name: "blog",
             root_url: crate::ROOT_URL,
         });
     }
 
     Ok(BlogTemplate {
-        pages: pages.values().into_iter().cloned().collect(),
+        pages: pages.values().cloned().collect(),
         page_name: "blog",
         root_url: crate::ROOT_URL,
     })
@@ -74,7 +81,10 @@ impl Ord for BlogPage {
     }
 }
 
-pub async fn get_pages<T>(pages: &mut T) -> anyhow::Result<()> where T : DerefMut<Target = BTreeMap<DateTime<Utc>, BlogPage>> {
+pub async fn get_pages<T>(pages: &mut T) -> anyhow::Result<()>
+where
+    T: DerefMut<Target = BTreeMap<DateTime<Utc>, BlogPage>>,
+{
     let mut entries = tokio::fs::read_dir("content").await?;
 
     while let Some(entry) = entries.next_entry().await? {
@@ -134,7 +144,10 @@ async fn parse_page(path: &std::path::Path, content: &str) -> anyhow::Result<Blo
     })
 }
 
-pub async fn page(State(cache): State<Cache>, Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCode> {
+pub async fn page(
+    State(cache): State<Cache>,
+    Path(page): Path<String>,
+) -> Result<BlogPageTemplate, StatusCode> {
     let path = PathBuf::from(format!("content/{}.md", page));
     let s = match tokio::fs::read_to_string(&path).await {
         Ok(a) => a,
