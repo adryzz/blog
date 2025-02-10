@@ -5,6 +5,7 @@ use comrak::plugins::syntect::SyntectAdapter;
 use comrak::{markdown_to_html_with_plugins, ComrakOptions, ComrakPlugins};
 use serde::Deserialize;
 
+use std::cmp::Reverse;
 use std::collections::BTreeMap;
 use std::io::ErrorKind;
 use std::ops::DerefMut;
@@ -83,7 +84,7 @@ impl Ord for BlogPage {
 
 pub async fn get_pages<T>(pages: &mut T) -> anyhow::Result<()>
 where
-    T: DerefMut<Target = BTreeMap<DateTime<Utc>, BlogPage>>,
+    T: DerefMut<Target = BTreeMap<Reverse<DateTime<Utc>>, BlogPage>>,
 {
     let mut entries = tokio::fs::read_dir("content").await?;
 
@@ -104,7 +105,7 @@ where
             let content = tokio::fs::read_to_string(entry.path()).await?;
             match parse_page(&entry.path(), &content).await {
                 Ok(p) => {
-                    pages.insert(p.timestamp, p);
+                    pages.insert(Reverse(p.timestamp), p);
                 }
                 Err(e) => {
                     tracing::error!("Error in page {}: {}", &entry.path().display(), e);

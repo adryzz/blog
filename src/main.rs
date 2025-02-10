@@ -61,7 +61,7 @@ async fn index() -> Result<IndexTemplate, StatusCode> {
 }
 
 #[derive(Debug, Clone)]
-pub struct Cache(Arc<RwLock<BTreeMap<DateTime<Utc>, blog::BlogPage>>>);
+pub struct Cache(Arc<RwLock<BTreeMap<std::cmp::Reverse<DateTime<Utc>>, blog::BlogPage>>>);
 
 impl Default for Cache {
     fn default() -> Self {
