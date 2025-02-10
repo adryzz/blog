@@ -33,10 +33,11 @@
 
       in 
       {% for tag in page.tags %}
+        {% let uri = format!("/blog?tagged={}", tag) %}
         {% if loop.last %}
-        <a>{{tag}}</a>
+        <a href={{uri}}>{{tag}}</a>
         {% else %}
-        <a>{{tag}}</a>, 
+        <a href={{uri}}>{{tag}}</a>, 
         {% endif %}
       {% endfor %}
     </div>

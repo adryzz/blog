@@ -1,8 +1,9 @@
 use askama::Template;
-use axum::extract::State;
+use axum::extract::{Query, State};
 use axum::{extract::Path, http::StatusCode};
 use comrak::plugins::syntect::SyntectAdapter;
 use comrak::{markdown_to_html_with_plugins, ComrakOptions, ComrakPlugins};
+use serde::Deserialize;
 
 use std::collections::BTreeMap;
 use std::io::ErrorKind;
@@ -14,8 +15,17 @@ use chrono::prelude::*;
 
 use crate::{metadata, Cache};
 
-pub async fn blog(State(cache): State<Cache>) -> Result<BlogTemplate, StatusCode> {
+#[axum::debug_handler]
+pub async fn blog(State(cache): State<Cache>, Query(params): Query<BlogQuery>) -> Result<BlogTemplate, StatusCode> {
     let pages = cache.0.read().await;
+
+    if let Some(tag) = params.tagged {
+        return Ok(BlogTemplate {
+            pages: pages.values().filter(|v| v.tags.contains(&tag)).cloned().collect(),
+            page_name: "blog",
+            root_url: crate::ROOT_URL,
+        });
+    }
 
     Ok(BlogTemplate {
         pages: pages.values().into_iter().cloned().collect(),
@@ -30,6 +40,11 @@ pub struct BlogTemplate {
     pages: Vec<BlogPage>,
     page_name: &'static str,
     root_url: &'static str,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct BlogQuery {
+    tagged: Option<String>,
 }
 
 #[derive(Debug, PartialEq, Eq, Clone)]

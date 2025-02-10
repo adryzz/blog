@@ -279,6 +279,7 @@ dependencies = [
  "chrono",
  "comrak",
  "rss",
+ "serde",
  "tokio",
  "tower-http",
  "tracing",

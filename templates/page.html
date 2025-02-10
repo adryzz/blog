@@ -46,12 +46,13 @@
 
       in 
       {% for tag in metadata.tags %}
-        {% if loop.last %}
-        <a>{{tag}}</a>
-        {% else %}
-        <a>{{tag}}</a>, 
-        {% endif %}
-      {% endfor %}
+      {% let uri = format!("/blog?tagged={}", tag) %}
+      {% if loop.last %}
+      <a href={{uri}}>{{tag}}</a>
+      {% else %}
+      <a href={{uri}}>{{tag}}</a>, 
+      {% endif %}
+    {% endfor %}
     </div>
 
     <h1 class="no-margin">{{metadata.title}}</h1>

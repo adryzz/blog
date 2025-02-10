@@ -16,6 +16,7 @@ axum = { version = "0.8", features = ["macros", "tracing"] }
 chrono = { version = "0.4.29", default-features = false, features = ["std"] }
 comrak = { version = "0.35", default-features = false, features = ["syntect", "emojis", "arbitrary"] }
 rss = { version = "2.0.8", features = ["chrono"] }
+serde = { version = "1.0.217", features = ["derive"] }
 tokio = { version = "1.31", features = ["full", "tracing"] }
 tower-http = { version = "0.6.2", features = ["fs", "trace"] }
 tracing = "0.1"
