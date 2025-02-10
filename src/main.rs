@@ -2,7 +2,7 @@ mod atom;
 mod blog;
 mod metadata;
 mod rss;
-use std::{collections::BTreeMap, sync::Arc};
+use std::{collections::BTreeMap, sync::Arc, time::Duration};
 use tokio::sync::RwLock;
 
 use askama::Template;
@@ -25,9 +25,13 @@ async fn main() {
 }
 
 async fn run() -> anyhow::Result<()> {
-    let mut cache = Cache::new();
+    let cache = Cache::new();
 
-    cache.update().await;
+
+    let mut c = cache.clone();
+    tokio::spawn(async move {
+        c.update_5min().await;
+    });
 
     let app = Router::new()
         .route("/", get(index))
@@ -76,5 +80,12 @@ impl Cache {
 
     pub async fn update(&mut self) {
         blog::get_pages(&mut self.0.write().await).await;
+    }
+
+    pub async fn update_5min(&mut self) {
+        loop {
+            self.update().await;
+            tokio::time::sleep(Duration::from_secs(5 * 60)).await;
+        }
     }
 }

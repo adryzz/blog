@@ -12,7 +12,8 @@
     <!-- this just makes the image preview big -->
     <meta name="twitter:card" content="summary_large_image">
     <!-- this makes the RSS feed recognizable by web browsers and extensions and stuff -->
-    <link rel="alternate" type="application/rss+xml" title="Lena's blog :3" href="/blog/rss.xml">
+    <link rel="alternate" type="application/atom+xml" title="Lena's blog :3 (Atom)" href="/blog/atom.xml">
+    <link rel="alternate" type="application/rss+xml" title="Lena's blog :3 (RSS)" href="/blog/rss.xml">
 
     <title>{% block title %}{{ title }}{% endblock %}</title>
     <style type="text/css">html {
@@ -163,6 +164,8 @@
             <span aria-hidden="true">|</span>
         <span><a href="/links">links</a></span>
         <span aria-hidden="true">|</span>
+        <span><a href="/blog/atom.xml">atom feed</a></span>
+        <span aria-hidden="true">|</span>
         <span><a href="/blog/rss.xml">rss feed</a></span>
       </nav>
     </header>
@@ -178,6 +181,8 @@
     <div class="site-footer">
     <footer class="site-footer">
       <div>
+        <span><a href="/blog/atom.xml">atom feed</a></span>
+            <span aria-hidden="true">|</span>        
         <span><a href="/blog/rss.xml">rss feed</a></span>
             <span aria-hidden="true">|</span>
         <span><a href="https://github.com/adryzz" rel="noreferrer" target="_blank">github</a></span>
