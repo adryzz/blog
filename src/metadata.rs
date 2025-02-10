@@ -39,10 +39,9 @@ pub fn find_timestamp(map: &[(&str, &str)], key: &str) -> anyhow::Result<DateTim
         .ok_or_else(|| anyhow!("Couldn't find value with key '{}'", key))?
         .1;
 
-    let int = i64::from_str_radix(value, 10)?;
+    let int = value.parse::<i64>()?;
 
-    DateTime::from_timestamp(int, 0)
-        .ok_or_else(|| anyhow!("Error while generating timestamp"))
+    DateTime::from_timestamp(int, 0).ok_or_else(|| anyhow!("Error while generating timestamp"))
 }
 
 pub fn calculate_read_time(content: &str) -> u32 {

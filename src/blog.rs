@@ -1,26 +1,24 @@
 use askama::Template;
+use axum::extract::State;
 use axum::{extract::Path, http::StatusCode};
 use comrak::plugins::syntect::SyntectAdapter;
 use comrak::{markdown_to_html_with_plugins, ComrakOptions, ComrakPlugins};
 
+use std::collections::BTreeMap;
 use std::io::ErrorKind;
+use std::ops::{Deref, DerefMut};
 use std::path::PathBuf;
 
 use anyhow::anyhow;
 use chrono::prelude::*;
 
-use crate::metadata;
+use crate::{metadata, Cache};
 
-pub async fn blog() -> Result<BlogTemplate, StatusCode> {
-    let pages = match get_pages().await {
-        Ok(p) => p,
-        Err(_e) => {
-            vec![]
-        }
-    };
+pub async fn blog(State(cache): State<Cache>) -> Result<BlogTemplate, StatusCode> {
+    let pages = cache.0.read().await;
 
     Ok(BlogTemplate {
-        pages,
+        pages: pages.values().into_iter().cloned().collect(),
         page_name: "blog",
         root_url: crate::ROOT_URL,
     })
@@ -34,8 +32,9 @@ pub struct BlogTemplate {
     root_url: &'static str,
 }
 
-#[derive(Debug, PartialEq, Eq)]
+#[derive(Debug, PartialEq, Eq, Clone)]
 pub struct BlogPage {
+    pub id: String,
     pub title: String,
     pub description: Option<String>,
     pub authors: Vec<String>,
@@ -50,7 +49,7 @@ pub struct BlogPage {
 
 impl PartialOrd for BlogPage {
     fn partial_cmp(&self, other: &Self) -> Option<std::cmp::Ordering> {
-        other.timestamp.partial_cmp(&self.timestamp)
+        Some(other.timestamp.cmp(&self.timestamp))
     }
 }
 
@@ -60,46 +59,53 @@ impl Ord for BlogPage {
     }
 }
 
-pub async fn get_pages() -> anyhow::Result<Vec<BlogPage>> {
+pub async fn get_pages<T>(pages: &mut T) -> anyhow::Result<()> where T : DerefMut<Target = BTreeMap<DateTime<Utc>, BlogPage>> {
     let mut entries = tokio::fs::read_dir("content").await?;
 
-    let mut pages = vec![];
-
     while let Some(entry) = entries.next_entry().await? {
-        if entry.file_type().await?.is_file() {
-            if let Some(ext) = entry.path().extension() {
-                if ext == "md" {
-                    let content = tokio::fs::read_to_string(entry.path()).await?;
-                    match parse_page(&entry.path(), &content).await {
-                        Ok(p) => pages.push(p),
-                        Err(e) => {
-                            tracing::error!("Error in page {}: {}", &entry.path().display(), e)
-                        }
-                    }
+        if !entry.file_type().await?.is_file() {
+            continue;
+        }
+        if let Some(ext) = entry.path().extension() {
+            if ext != "md" {
+                continue;
+            }
+            if pages
+                .values()
+                .any(|p| p.id == entry.path().file_stem().unwrap().to_str().unwrap())
+            {
+                continue;
+            }
+            let content = tokio::fs::read_to_string(entry.path()).await?;
+            match parse_page(&entry.path(), &content).await {
+                Ok(p) => {
+                    pages.insert(p.timestamp, p);
+                }
+                Err(e) => {
+                    tracing::error!("Error in page {}: {}", &entry.path().display(), e);
                 }
             }
         }
     }
 
-    pages.sort();
-
-    Ok(pages)
+    Ok(())
 }
 
-async fn parse_page(path: &PathBuf, content: &str) -> anyhow::Result<BlogPage> {
-    let url = format!(
-        "/blog/{}",
-        path.file_stem()
-            .ok_or_else(|| anyhow!("Error while generating page URL"))?
-            .to_str()
-            .ok_or_else(|| anyhow!("Error while generating page URL"))?
-    );
+async fn parse_page(path: &std::path::Path, content: &str) -> anyhow::Result<BlogPage> {
+    let stem = path
+        .file_stem()
+        .ok_or_else(|| anyhow!("Error while generating page URL"))?
+        .to_str()
+        .ok_or_else(|| anyhow!("Error while generating page URL"))?;
+
+    let url = format!("/blog/{}", stem);
 
     let min = metadata::calculate_read_time(content);
 
     let metadata = metadata::parse_from_markdown(content)?;
 
     Ok(BlogPage {
+        id: stem.to_string(),
         title: metadata::find_single(&metadata, "title")?,
         description: metadata::find_single(&metadata, "description").ok(),
         authors: metadata::find_multiple(&metadata, "author"),
@@ -113,7 +119,7 @@ async fn parse_page(path: &PathBuf, content: &str) -> anyhow::Result<BlogPage> {
     })
 }
 
-pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCode> {
+pub async fn page(State(cache): State<Cache>, Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCode> {
     let path = PathBuf::from(format!("content/{}.md", page));
     let s = match tokio::fs::read_to_string(&path).await {
         Ok(a) => a,
@@ -144,6 +150,7 @@ pub async fn page(Path(page): Path<String>) -> Result<BlogPageTemplate, StatusCo
     opt.extension.superscript = true;
     opt.extension.table = true;
     opt.extension.tasklist = true;
+    opt.extension.footnotes = true;
     opt.render.unsafe_ = true;
 
     Ok(BlogPageTemplate {
