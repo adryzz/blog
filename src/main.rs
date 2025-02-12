@@ -8,7 +8,7 @@ use tokio::sync::RwLock;
 use askama::Template;
 use axum::{http::StatusCode, routing::get, Router};
 use chrono::{DateTime, Utc};
-use tower_http::services::ServeDir;
+use tower_http::services::{ServeDir, ServeFile};
 
 const ROOT_URL: &str = "http://lena.nihil.gay";
 const ATOM_URL: &str = "http://lena.nihil.gay/blog/atom.xml";
@@ -35,6 +35,7 @@ async fn run() -> anyhow::Result<()> {
 
     let app = Router::new()
         .route("/", get(index))
+        .route_service("/style.css", ServeFile::new("style.css"))
         .route("/blog/rss.xml", get(rss::rss))
         .route("/blog/atom.xml", get(atom::atom))
         .route("/blog/{page}", get(blog::page))

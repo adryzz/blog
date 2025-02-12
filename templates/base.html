@@ -11,138 +11,12 @@
     <meta property="og:site_name" content="Lena's blog :3">
     <!-- this just makes the image preview big -->
     <meta name="twitter:card" content="summary_large_image">
-    <!-- this makes the RSS feed recognizable by web browsers and extensions and stuff -->
+    <!-- this makes the Atom and RSS feeds recognizable by web browsers and extensions and stuff -->
     <link rel="alternate" type="application/atom+xml" title="Lena's blog :3 (Atom)" href="/blog/atom.xml">
     <link rel="alternate" type="application/rss+xml" title="Lena's blog :3 (RSS)" href="/blog/rss.xml">
 
     <title>{% block title %}{{ title }}{% endblock %}</title>
-    <style type="text/css">html {
-      color:#e7e6e3;
-      background:#181a1b
-    }
-    a {
-      color:#ff66ba
-    }
-    .like-a {
-      color:#ff66ba;
-      text-decoration:underline
-    }
-    a[href^=""]:link,
-    a[href^="./"]:link,
-    a[href^="../"]:link,
-    a:active {
-      color:#7534d5;
-    }
-    a.active,
-    footer {
-      padding-top:5px
-    }
-    #content {
-      max-width:900px;
-      margin-left:auto;
-      margin-right:auto;
-      padding-top:2em;
-      padding-bottom:2em;
-    }
-    .middot:after {
-      content:"·";
-      display:inline-block
-    }
-    .article_header,
-    .page_header {
-      border-bottom:1px dotted #ff66ba;
-      padding-bottom:4px
-    }
-    img,
-    video {
-      max-width: 90%;
-      max-height: 600px;
-    }
-    .content-warning {
-      width:fit-content;
-      background-color: #2d1a26;
-      border:2px solid #920050;
-      border-radius:8px;
-      margin-top:16px;
-      margin-bottom:16px;
-      padding:4px;
-      font-size:1.1rem
-    }
-    .byline {
-      font-size: 10px;
-      margin-top: 0;
-      margin-left:4px;
-      font-weight:500
-    }
-    .byline-big {
-      font-size: 15px;
-      margin-top: 0;
-      margin-bottom: 24px;
-      font-weight:500
-    }
-    .greentext {
-      color:#789922
-    }
-    .no-bullets {
-      list-style-type: none;
-      padding-left: 0;
-    }
-    .reduced-margin {
-      list-style-type: none;
-      margin: 6px;
-    }
-    .no-margin {
-      margin: 0;
-    }
-    .margin-bottom {
-      margin-bottom: 24px;
-    }
-    .margin-big {
-      margin: 24px
-    }
-    .site-header {
-      padding-bottom:5px;
-      text-align: center;
-    }
-    .site-footer {
-      padding-top:5px;
-      text-align: center;
-    }
-    .separator-top {
-      width: 100%;
-      height: 0;
-      border-top: 1px solid #ff66ba;
-      margin-top: 10px;
-      overflow:unset;
-    }
-    .separator-bottom {
-      width: 100%;
-      height: 0;
-      border-bottom: 1px solid #ff66ba;
-      margin-bottom: 10px;
-      overflow:unset;
-    }
-    pre {
-      overflow-x: auto;
-    }
-    .badge {
-      width: 88px;
-      height: 31px;
-    }
-    table {
-      overflow-x: scroll;
-    }
-    tr, td, th {
-      border: 1px solid #ff66ba;
-      padding: 2px;
-    }
-    .hidden {
-      display: none;
-    }
-    input:checked + .hidden {
-      display: block;
-    }
-    </style>
+    <link rel="stylesheet" href="/style.css">
     <!--[if IE]>
       <style>
         img {
@@ -153,7 +27,7 @@
     <![endif]-->
   </head>
   <body>
-    <!-- this is here just because IE5 doesnt support headers or footers-->
+    <!-- this is here just because old browsers dont support headers or footers-->
     <div class="site-header">
     <header class="site-header"> 
       <h1>Lena's <sub role="presentation">{% block page_name %}home{% endblock %}</sub></h1>
@@ -171,13 +45,16 @@
     </header>
   </div>
     <div class="separator-top"></div>
-
+    <!-- this makes the layout work without CSS. CSS will remove all line breaks anyway. -->
+    <br>
+    <br>
+    
     <div id="content" role="main">
       {% block content %}<p>Placeholder content</p>{% endblock %}
     </div>
 
     <div class="separator-bottom"></div>
-    <!-- this is here just because IE5 doesnt support headers or footers-->
+    <!-- this is here just because old browsers dont support headers or footers-->
     <div class="site-footer">
     <footer class="site-footer">
       <div>
@@ -191,6 +68,9 @@
             <span aria-hidden="true">|</span>
         <span><a rel="me" href="https://social.nihil.gay/lena">fedi (gayer)</a></span>
       </div>
+      <!-- this makes the layout work without CSS. CSS will remove all line breaks anyway. -->
+      <br>
+      <br>
       <div class="badges margin-big">
         {% include "badges.html" %}
       </div>
